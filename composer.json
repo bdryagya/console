@@ -1,0 +1,20 @@
+{
+    "name": "bakhari/console",
+    "description": "Console",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yagya Chaudhary",
+            "email": "mail@bdryagya.com.np"
+        }
+    ],
+    "require": {
+        "illuminate/config": "^5.2",
+        "phanan/remote": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bakhari\\Console\\": "src/"
+        }
+    }
+}
