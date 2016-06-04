@@ -94,14 +94,19 @@ class Console implements ConsoleInterface
      * @param   \Bakhari\Console\CLI\Command   $command
      * @param   bool    $dry_run
      */
-    public function run(Command $command, $dry_run = false)
+    public function run(Command $command, $dry_run = false, $wait = 0)
     {
         if($dry_run) {
 
-            // We'll just echo back
-            $this->getStreamManager()->writeAll(print_r($command, true));
+            // We'll just send output to streams without executing
+            while($cmd = $command->fetch()) {
 
-            $this->output->push($command);
+                usleep($wait);
+
+                $this->output->push($cmd);
+
+                $this->getStreamManager()->writeAll($cmd . "\n");
+            }
 
         } else {
 
@@ -114,6 +119,8 @@ class Console implements ConsoleInterface
             $this->getStreamManager()->writeAll($read);
 
             while($cmd = $command->fetch()) {
+
+                usleep($wait);
 
                 $this->cli->write($cmd . "\n");
 
