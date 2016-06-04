@@ -183,7 +183,7 @@ class Console implements ConsoleInterface
      *
      * @return  \Bakhari\Console\Streams\StreamManager
      */
-    protected function getStreamManager()
+    public function getStreamManager()
     {
         return $this->streamManager;
     }
