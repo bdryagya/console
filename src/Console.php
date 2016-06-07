@@ -38,7 +38,7 @@ class Console implements ConsoleInterface
      *
      * @var regex string
      */
-    protected $prompt = '/.*[>|$|#]/';
+    protected $prompt;
 
     /**
      * Output of the console
@@ -62,7 +62,7 @@ class Console implements ConsoleInterface
     {
         $this->config = $config;
 
-        $this->prompt = $config->get('prompt', '/\$/');
+        $this->prompt = $config->get('prompt', '/[\$#>]/');
 
         $this->output = new Output;
 
@@ -96,37 +96,48 @@ class Console implements ConsoleInterface
      */
     public function run(Command $command, $dry_run = false, $wait = 0)
     {
+
         if($dry_run) {
 
             // We'll just send output to streams without executing
             while($cmd = $command->fetch()) {
 
+                // read regex 1 -> plain text
+                // read regex 2 -> pcre
+                $read_regex = 1;
+
                 usleep($wait);
 
-                $this->output->push($cmd);
+                if(isset($cmd['regex']) && $cmd['regex']){
+                    $read_regex = 2;
+                }
 
-                $this->getStreamManager()->writeAll($cmd . "\n");
+                $this->output->push($cmd['write'] . ' => ' . "($read_regex) " . $cmd['read'] );
+
+                $this->getStreamManager()->writeAll($cmd['write'] .  ' => ' . "($read_regex) " . $cmd['read'] . "\n");
             }
 
         } else {
 
-            $this->cli->setTimeout(15);
-
-            $read = $this->cli->read($this->prompt, 2);
-
-            $this->output->push($read);
-            
-            $this->getStreamManager()->writeAll($read);
-
             while($cmd = $command->fetch()) {
+
+                // read regex 1 -> plain text
+                // read regex 2 -> PCRE 
+                $read_regex = 1;
+
+                if(isset($cmd['regex']) && $cmd['regex']){
+                    $read_regex = 2;
+                }
 
                 usleep($wait);
 
-                $this->cli->write($cmd . "\n");
+                // $this->cli->write($cmd . "\n");
+                $this->cli->write($cmd['write'] . "\n");
 
                 $this->cli->setTimeout(15);
 
-                $read = $this->cli->read($this->prompt, 2);
+                // check if the read is a pcre
+                $read = $this->cli->read($cmd['read'], $read_regex);
 
                 $this->output->push($read);
                 
