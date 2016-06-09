@@ -27,9 +27,28 @@ class Command implements CommandContract
      *
      * @return  array|string
      */
-    public function __construct($config)
+    public function __construct($config = null)
     {
-        $this->list = $config;
+        $this->build($config);
+    }
+
+    /**
+     * Build command
+     *
+     * @var $config
+     *
+     * @return void
+     */
+    protected function build($config = null)
+    {
+
+        if(isset($config[0]) && is_array($config[0])) {
+
+            $this->list = $config;
+        } else {
+
+            $this->list = [ $config ];
+        }
     }
 
     /**
