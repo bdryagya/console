@@ -9,13 +9,13 @@ use PhanAn\Remote\Remote;
 use Bakhari\Console\Output;
 use Bakhari\Console\ReturnClass;
 use Bakhari\Console\Contracts\Command;
+use Bakhari\Console\Streams\FileOutputStream;
 use Bakhari\Console\Streams\StandardOutputStream;
 use Bakhari\Console\Streams\Manager as StreamManager;
 use Bakhari\Console\Contracts\Console as ConsoleInterface;
 use Bakhari\Console\Contracts\OutputStream as OutputStreamContract;
 
-use Illuminate\Config\Repository as Config;
-use Illuninate\Contracts\Config as ConfigContract;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class Console implements ConsoleInterface
 {
@@ -72,6 +72,12 @@ class Console implements ConsoleInterface
         if($this->config->get('stdout', true)) {
 
             $this->pushOutputStream(new StandardOutputStream);
+        }
+
+        // Setup the File Output Stream
+        if($this->config->get('fileout', false)) {
+
+            $this->pushOutputStream(new FileOutputStream($this->config->get('fileout')));
         }
 
         // Setup Command Line Interface
