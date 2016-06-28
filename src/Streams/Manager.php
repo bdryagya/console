@@ -44,7 +44,7 @@ class Manager
      *
      * @return  void
      */
-    public function writeAll(string $chunk)
+    public function writeAll($chunk)
     {
         foreach($this->streams as $stream) {
             $stream->write($chunk);

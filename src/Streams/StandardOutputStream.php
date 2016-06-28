@@ -11,7 +11,7 @@ class StandardOutputStream implements OutputStreamContract
      * 
      * @var string
      */
-    public function write(string $chunk)
+    public function write($chunk)
     {
         echo $chunk;
     }

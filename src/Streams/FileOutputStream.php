@@ -28,7 +28,7 @@ class FileOutputStream implements OutputStreamContract
     /**
      * Write output data to the file
      */
-    public function write(string $chunk)
+    public function write($chunk)
     {
         return file_put_contents($this->file, $chunk, FILE_APPEND);
     }
